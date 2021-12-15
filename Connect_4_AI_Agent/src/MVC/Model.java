@@ -22,13 +22,19 @@ public class Model {
 
     private final int COLUMNS = 7 ;
 
-    private int num_of_expanded_nodes ;
+    private long num_of_expanded_nodes ;
 
     private long time_taken ;
 
     public Model( boolean alpha_beta , int k ){
 
         board = new cell[ROWS][COLUMNS];
+
+        for (int i = 0 ; i < ROWS ; i++){
+            for (int j = 0 ; j < COLUMNS ; j++){
+                board[i][j] = cell.empty;
+            }
+        }
 
         num_of_moves = 42 ;
 
@@ -56,9 +62,10 @@ public class Model {
         if ( success ){
             update_score(col);
             num_of_moves--;
+
         }
 
-        return success;
+        return success ;
     }
 
     // update score after inserting in board
@@ -108,7 +115,7 @@ public class Model {
 
         counter = 0 ;
 
-        while ( end_i + 1 < ROWS && end_j + 1 <= COLUMNS  && counter < 3 ){
+        while ( end_i + 1 < ROWS && end_j + 1 < COLUMNS  && counter < 3 ){
             if ( board[end_i+1][end_j+1] == val ){
                 end_i++;
                 end_j++;
@@ -261,7 +268,7 @@ public class Model {
     // used
     private int eval_func(cell[][] board){
 
-        int score =  2 * ( agent_score - user_score ) ;
+        int score =  100 * ( agent_score - user_score ) ;
 
         int old_user = user_score;
 
@@ -704,7 +711,7 @@ public class Model {
     // run minimax and modify the board with agent's play
     // return true on finishing, false otherwise
 
-    public boolean update_board( ){
+    public void update_board( ){
 
         time_taken = System.currentTimeMillis();
 
@@ -716,8 +723,6 @@ public class Model {
         time_taken = System.currentTimeMillis() - time_taken ;
 
         num_of_moves-- ;
-
-        return num_of_moves == 0;
     }
 
     public cell[][] get_board(){
@@ -732,11 +737,13 @@ public class Model {
         return this.agent_score;
     }
 
-    public int get_num_of_expanded_nodes() {
+    public long get_num_of_expanded_nodes() {
         return num_of_expanded_nodes;
     }
 
     public long get_time_taken () {
         return this.time_taken ;
     }
+
+    public int get_num_of_moves(){return num_of_moves;}
 }
