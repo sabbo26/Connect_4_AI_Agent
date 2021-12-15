@@ -147,6 +147,10 @@ public class View_game {
         alpha_beta.setDisable(true);
         insertBtn.setDisable(false);
         startBtn.setDisable(true);
+        user_score_label.setText("0");
+        agent_score_label.setText("0");
+        number_expanded_nodes.setText("0");
+        time_taken.setText("0");
     }
 
     public void endBtn(){
