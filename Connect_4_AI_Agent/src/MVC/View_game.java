@@ -1,5 +1,6 @@
 package MVC;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -177,7 +178,7 @@ public class View_game {
         }
 
 
-        if ( !my_controller.set_board(col-1) ){
+        else if ( !my_controller.set_board(col-1) ){
             createAlert("Error","column is full" , Alert.AlertType.ERROR);
         }
         else{
@@ -191,18 +192,22 @@ public class View_game {
                end_game();
             }// finish
 
-            agent_play();
+            new Thread(()->{
+                agent_play();
+                Platform.runLater(()->{
+                    update_view();
+                    if ( my_controller.get_num_of_moves() == 0 ){
+                        end_game();
+                    }
+                });
+            }).start();
 
-            update_view(); // view agent play
-
-            if ( my_controller.get_num_of_moves() == 0 ){
-                end_game();
-            }
         }
     }
 
 
     public void update_view(){
+
         for (int i = 0 ; i < ROWS ; i++){
             for (int j = 0 ; j < COLUMNS ; j++){
                 if(board[i][j] == cell.user ){
@@ -214,11 +219,12 @@ public class View_game {
             }
         }
 
+
+
         time_taken.setText(time + " ms");
         number_expanded_nodes.setText(Long.toString(expanded_nodes));
         user_score_label.setText(Integer.toString(user_score));
         agent_score_label.setText(Integer.toString(agent_score));
-
     }
 
     public void agent_play(){
